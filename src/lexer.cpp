@@ -24,9 +24,10 @@ const std::unordered_map<std::string, TokenType> Lexer::_keyword_lookup = {
     {"return", TokenType::Return},
 };
 
-Lexer::Lexer(std::string input)
-    : _input(input), _position(input.begin()), _token() {
-  next();
+Lexer::Lexer(std::string input) {
+  _input = input;
+  _position = _input.begin();
+  _token = next_token();
 }
 
 Token Lexer::peek() {
@@ -49,25 +50,27 @@ Token Lexer::next_token() noexcept {
   // Get rid of whitespace
   _position = std::find_if_not(_position, _input.end(), is_whitespace);
 
-  auto ch = *_position++;
+  auto ch = *_position;
   std::string ch_str{ch};
+  std::cout << "Current char: " << ch << std::endl;
 
   if (_token_lookup.find(ch_str) != _token_lookup.end()) {
     auto type = _token_lookup.at(ch_str);
+    _position++;
 
     // TODO: check for ch being =, <, >, !
     return Token(type, ch_str);
   }
 
   if (std::isdigit(ch)) {
-    auto start = _position - 1;
+    auto start = _position;
     _position = std::find_if_not(_position, _input.end(), isdigit);
     std::string literal{start, _position};
     return Token(TokenType::Number, literal);
   }
 
   if (std::isalpha(ch)) {
-    auto start = _position - 1;
+    auto start = _position;
     _position = std::find_if_not(_position, _input.end(), isalpha);
     std::string literal{start, _position};
     // Check for keywords
@@ -77,6 +80,7 @@ Token Lexer::next_token() noexcept {
     }
 
     // If not a keyword, then identifier
+    // _position++;
     return Token(TokenType::Identifier, literal);
   }
 

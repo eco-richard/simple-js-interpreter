@@ -32,9 +32,12 @@ int main() {
   for (const auto type : testTypes) {
     const auto token = l.peek();
 
-    std::cout << "type : " << std::to_string(type) 
-            << " token.type : " << std::to_string(token.type) << std::endl;
-    std::cout << std::boolalpha << "Equal : " << (type == token.type);
+    std::cout << "type : '" << std::to_string(type) << "' token.type : '" << std::to_string(token.type) << "'" << std::endl;
+    std::cout << "literal : " << token.literal << std::endl;
+    auto equal = (type == token.type);
+    std::cout << std::boolalpha << "Equal : " << equal << std::endl;
+    std::cout << std::endl;
+    l.next();
   }
 
   return 0;

@@ -25,7 +25,7 @@ TEST(LexerTest, SimpleJavaScript) {
     let five = 5;
     const ten = 10;
 
-    const add = function(x, y) {
+    const add = function(x , y) {
         x + y;
     };
 
@@ -49,6 +49,10 @@ TEST(LexerTest, SimpleJavaScript) {
   Lexer l{input};
   for (const auto type : testTypes) {
     const auto token = l.peek();
+    std::cout << "Expected: " << std::to_string(type) << "\n"
+              << "Got: " << std::to_string(token.type)  << " with : "
+              << token.literal << "\n" << std::endl;
+
     ASSERT_EQ(token.type, type) << "Expected: " << std::to_string(type) << "\n"
                                 << "Got: " << std::to_string(token.type);
     l.next();

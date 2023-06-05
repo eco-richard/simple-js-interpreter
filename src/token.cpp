@@ -21,7 +21,7 @@ std::string std::to_string(TokenType t) {
     case TokenType::Plus:
       return "+";
     case TokenType::Comma:
-      return "-";
+      return ",";
     case TokenType::Semicolon:
       return ";";
     case TokenType::LeftParen:
