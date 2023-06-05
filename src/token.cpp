@@ -4,9 +4,7 @@ Token::Token() : type(), literal("") {}
 
 Token::Token(TokenType t, Literal l) : type(t), literal(l) {}
 
-namespace std {
-
-std::string to_string(TokenType t) {
+std::string std::to_string(TokenType t) {
   switch (t) {
     case TokenType::Illegal:
       return "[illegal]";
@@ -63,6 +61,5 @@ std::string to_string(TokenType t) {
     case TokenType::NotEqual:
       return "!=";
   }
-}
 
 };  // namespace std
