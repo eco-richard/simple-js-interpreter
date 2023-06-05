@@ -52,7 +52,6 @@ Token Lexer::next_token() noexcept {
 
   auto ch = *_position;
   std::string ch_str{ch};
-  std::cout << "Current char: " << ch << std::endl;
 
   if (_token_lookup.find(ch_str) != _token_lookup.end()) {
     auto type = _token_lookup.at(ch_str);
