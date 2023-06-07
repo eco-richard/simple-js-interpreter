@@ -10,7 +10,11 @@ const std::unordered_map<std::string, TokenType> Lexer::_token_lookup = {
     {"(", TokenType::LeftParen}, {")", TokenType::RightParen},
     {"{", TokenType::LeftBrace}, {"}", TokenType::RightBrace},
     {"[", TokenType::LeftBrack}, {"]", TokenType::RightBrack},
-    {",", TokenType::Comma},     {";", TokenType::Semicolon}};
+    {",", TokenType::Comma},     {";", TokenType::Semicolon},
+    {"-", TokenType::Minus},     {"!", TokenType::Bang},
+    {"/", TokenType::Slash},     {"*", TokenType::Asterisk},
+    {"%", TokenType::Percent},   {"<", TokenType::Lt},
+    {">", TokenType::Gt}};
 
 const std::unordered_map<std::string, TokenType> Lexer::_keyword_lookup = {
     {"function", TokenType::Function},
@@ -42,6 +46,34 @@ bool Lexer::is_whitespace(char ch) noexcept {
   return ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n';
 }
 
+char Lexer::peek_char() noexcept {
+  return (*(_position + 1));
+}
+
+std::string Lexer::peek_2_char() noexcept {
+  return std::string{_position + 1, _position + 3};
+}
+
+std::optional<Token> Lexer::check_equality_strength(char ch) noexcept {
+    if (peek_2_char() == "==" && ch == '=') {
+        _position += 3;
+        return Token(TokenType::StrongEqual, "===");
+    } 
+    if (peek_2_char() == "==" && ch == '!') {
+        _position += 3;
+        return Token(TokenType::StrongNotEqual, "!==");
+    }
+    if (peek_char() == '=' && ch == '=') {
+        _position += 2;
+        return Token(TokenType::WeakEqual, "==");
+    }
+    if (peek_char() == '=' && ch == '!') {
+        _position += 2;
+        return Token(TokenType::WeakNotEqual, "!=");
+    }
+    return {};
+}
+
 Token Lexer::next_token() noexcept {
   if (_position >= _input.end()) {
     return Token(TokenType::Eof, "");
@@ -54,10 +86,27 @@ Token Lexer::next_token() noexcept {
   std::string ch_str{ch};
 
   if (_token_lookup.find(ch_str) != _token_lookup.end()) {
+    if (ch_str == "=") {
+      auto token = check_equality_strength('=');
+      if (token.has_value()) {
+        return token.value();
+      }
+      ++_position;
+      return Token(TokenType::Assign, "=");
+    }
+
+    if (ch_str == "!") {
+      auto token = check_equality_strength('!');
+      if (token.has_value()) {
+        return token.value();
+      }
+      ++_position;
+      return Token(TokenType::Bang, "!");
+    }
+
     auto type = _token_lookup.at(ch_str);
     _position++;
 
-    // TODO: check for ch being =, <, >, !
     return Token(type, ch_str);
   }
 

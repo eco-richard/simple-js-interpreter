@@ -20,6 +20,16 @@ std::string std::to_string(TokenType t) {
       return "=";
     case TokenType::Plus:
       return "+";
+    case TokenType::Minus:
+      return "-";
+    case TokenType::Bang:
+      return "!";
+    case TokenType::Slash:
+      return "/";
+    case TokenType::Asterisk:
+      return "*";
+    case TokenType::Percent:
+      return "%";
     case TokenType::Comma:
       return ",";
     case TokenType::Semicolon:
@@ -58,8 +68,18 @@ std::string std::to_string(TokenType t) {
       return "===";
     case TokenType::WeakEqual:
       return "==";
-    case TokenType::NotEqual:
+    case TokenType::StrongNotEqual:
+      return "!==";
+    case TokenType::WeakNotEqual:
       return "!=";
+    case TokenType::Lt:
+      return "<";
+    case TokenType::Gt:
+      return ">";
+    case TokenType::Le:
+      return "<=";
+    case TokenType::Ge:
+      return ">=";
   }
 
 };  // namespace std

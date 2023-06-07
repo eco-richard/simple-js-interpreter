@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <cstddef>
 #include <iostream>
 #include <lexer.hpp>
 #include <string>
@@ -30,7 +31,14 @@ TEST(LexerTest, SimpleJavaScript) {
     };
 
     let res = add(x, y);
-    )";
+    !-/*5;
+    5 < 10 > 5;
+
+    if (5 < 10) {
+        return true;
+    } else {
+        return false;
+    })";
 
   constexpr TokenType testTypes[]{
       TokenType::Let,        TokenType::Identifier, TokenType::Assign,
@@ -44,10 +52,62 @@ TEST(LexerTest, SimpleJavaScript) {
       TokenType::RightBrace, TokenType::Semicolon,  TokenType::Let,
       TokenType::Identifier, TokenType::Assign,     TokenType::Identifier,
       TokenType::LeftParen,  TokenType::Identifier, TokenType::Comma,
-      TokenType::Identifier, TokenType::RightParen, TokenType::Semicolon};
-
+      TokenType::Identifier, TokenType::RightParen, TokenType::Semicolon,
+      TokenType::Bang,       TokenType::Minus,      TokenType::Slash,
+      TokenType::Asterisk,   TokenType::Number,     TokenType::Semicolon,
+      TokenType::Number,     TokenType::Lt,         TokenType::Number,
+      TokenType::Gt,         TokenType::Number,     TokenType::Semicolon,
+      TokenType::If,         TokenType::LeftParen,  TokenType::Number,
+      TokenType::Lt,         TokenType::Number,     TokenType::RightParen,
+      TokenType::LeftBrace,  TokenType::Return,     TokenType::True,
+      TokenType::Semicolon,  TokenType::RightBrace, TokenType::Else,
+      TokenType::LeftBrace,  TokenType::Return,     TokenType::False,
+      TokenType::Semicolon,  TokenType::RightBrace,
+  };
   Lexer l{input};
   for (const auto type : testTypes) {
+    const auto token = l.peek();
+
+    ASSERT_EQ(token.type, type) << "Expected: " << std::to_string(type) << "\n"
+                                << "Got: " << std::to_string(token.type);
+    l.next();
+  }
+}
+
+TEST(LexerTest, EqualityTest) {
+  constexpr auto input{R"(
+    let five = 5;
+    10 === 10;
+    10 == 10;
+    9 != 10;
+    9 !== 10;
+    )"};
+
+  constexpr TokenType testTypes[]{TokenType::Let,
+                                  TokenType::Identifier,
+                                  TokenType::Assign,
+                                  TokenType::Number,
+                                  TokenType::Semicolon,
+                                  TokenType::Number,
+                                  TokenType::StrongEqual,
+                                  TokenType::Number,
+                                  TokenType::Semicolon,
+                                  TokenType::Number,
+                                  TokenType::WeakEqual,
+                                  TokenType::Number,
+                                  TokenType::Semicolon,
+                                  TokenType::Number,
+                                  TokenType::WeakNotEqual,
+                                  TokenType::Number,
+                                  TokenType::Semicolon,
+                                  TokenType::Number,
+                                  TokenType::StrongNotEqual,
+                                  TokenType::Number,
+                                  TokenType::Semicolon,};
+
+  Lexer l{input};
+
+  for (const auto& type : testTypes) {
     const auto token = l.peek();
 
     ASSERT_EQ(token.type, type) << "Expected: " << std::to_string(type) << "\n"

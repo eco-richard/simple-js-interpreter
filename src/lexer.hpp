@@ -1,6 +1,7 @@
 #ifndef SIMPLE_JS_INTERPRETER_SRC_LEXER_HPP
 #define SIMPLE_JS_INTERPRETER_SRC_LEXER_HPP
 
+#include <optional>
 #include <unordered_map>
 #include "token.hpp"
 
@@ -14,6 +15,9 @@ class Lexer {
   Token next_token() noexcept;
   char read_char() noexcept;
   static bool is_whitespace(char ch) noexcept;
+  char peek_char() noexcept;
+  std::string peek_2_char() noexcept;
+  std::optional<Token> check_equality_strength(char ch) noexcept;
 
  private:
   Token _token;

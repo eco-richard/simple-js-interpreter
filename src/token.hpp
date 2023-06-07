@@ -17,6 +17,11 @@ enum class TokenType {
   // Operators
   Assign,
   Plus,
+  Minus,
+  Bang,
+  Slash,
+  Asterisk,
+  Percent,
 
   // Delimiters
   Comma,
@@ -42,7 +47,12 @@ enum class TokenType {
 
   StrongEqual,
   WeakEqual,
-  NotEqual
+  StrongNotEqual,
+  WeakNotEqual,
+  Lt,
+  Gt,
+  Le,
+  Ge
 };
 
 using Literal = std::string;
