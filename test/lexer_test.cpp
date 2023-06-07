@@ -1,9 +1,9 @@
-#include <gtest/gtest.h>
 #include <cstddef>
 #include <iostream>
-#include <lexer.hpp>
 #include <string>
-#include <token.hpp>
+#include <gtest/gtest.h>
+#include "lexer.hpp"
+#include "token.hpp"
 
 TEST(LexerTest, TestNextToken) {
   constexpr TokenType testTypes[]{TokenType::Assign,    TokenType::Plus,

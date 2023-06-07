@@ -4,6 +4,32 @@ Token::Token() : type(), literal("") {}
 
 Token::Token(TokenType t, Literal l) : type(t), literal(l) {}
 
+Token::Token(const Token& t) {
+    type = t.type;
+    literal = t.literal;
+}
+
+Token::Token(Token&& t) {
+    type = std::move(t.type);
+    literal = std::move(t.literal);
+}
+
+Token& Token::operator=(const Token& rhs) {
+    if (this == &rhs) {
+        return *this;
+    }
+    type = rhs.type;
+    literal = rhs.literal;
+    return *this;
+}
+
+Token& Token::operator=(Token&& rhs) {
+    type = std::move(rhs.type);
+    literal = std::move(rhs.literal);
+
+    return *this;
+}
+
 std::string std::to_string(TokenType t) {
   switch (t) {
     case TokenType::Illegal:

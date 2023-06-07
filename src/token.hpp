@@ -62,7 +62,17 @@ struct Token {
   Literal literal;
   Token(TokenType t, Literal l);
   Token();
+  Token(const Token& t);
+  Token(Token&& t);
+  Token& operator=(const Token& rhs);
+  Token& operator=(Token&& rhs);
 };
+
+struct Identifier {
+    Token tok;
+    std::string value;
+};
+
 
 std::ostream& operator<<(std::ostream& os, const Token& t);
 
