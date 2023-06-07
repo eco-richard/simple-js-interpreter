@@ -81,6 +81,8 @@ TEST(LexerTest, EqualityTest) {
     10 == 10;
     9 != 10;
     9 !== 10;
+    9 <= 10;
+    10 >= 9;
     )"};
 
   constexpr TokenType testTypes[]{TokenType::Let,
@@ -103,7 +105,16 @@ TEST(LexerTest, EqualityTest) {
                                   TokenType::Number,
                                   TokenType::StrongNotEqual,
                                   TokenType::Number,
-                                  TokenType::Semicolon,};
+                                  TokenType::Semicolon,
+                                  TokenType::Number,
+                                  TokenType::Le,
+                                  TokenType::Number,
+                                  TokenType::Semicolon,
+                                  TokenType::Number,
+                                  TokenType::Ge,
+                                  TokenType::Number,
+                                  TokenType::Semicolon,
+                                  TokenType::Eof};
 
   Lexer l{input};
 

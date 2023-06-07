@@ -55,33 +55,32 @@ std::string Lexer::peek_2_char() noexcept {
 }
 
 std::optional<Token> Lexer::check_equality_strength(char ch) noexcept {
-    if (peek_2_char() == "==" && ch == '=') {
-        _position += 3;
-        return Token(TokenType::StrongEqual, "===");
-    } 
-    if (peek_2_char() == "==" && ch == '!') {
-        _position += 3;
-        return Token(TokenType::StrongNotEqual, "!==");
-    }
-    if (peek_char() == '=' && ch == '=') {
-        _position += 2;
-        return Token(TokenType::WeakEqual, "==");
-    }
-    if (peek_char() == '=' && ch == '!') {
-        _position += 2;
-        return Token(TokenType::WeakNotEqual, "!=");
-    }
-    return {};
+  if (peek_2_char() == "==" && ch == '=') {
+    _position += 3;
+    return Token(TokenType::StrongEqual, "===");
+  }
+  if (peek_2_char() == "==" && ch == '!') {
+    _position += 3;
+    return Token(TokenType::StrongNotEqual, "!==");
+  }
+  if (peek_char() == '=' && ch == '=') {
+    _position += 2;
+    return Token(TokenType::WeakEqual, "==");
+  }
+  if (peek_char() == '=' && ch == '!') {
+    _position += 2;
+    return Token(TokenType::WeakNotEqual, "!=");
+  }
+  return {};
 }
 
 Token Lexer::next_token() noexcept {
+    // Get rid of whitespace
+    _position = std::find_if_not(_position, _input.end(), is_whitespace);
+
   if (_position >= _input.end()) {
     return Token(TokenType::Eof, "");
   }
-
-  // Get rid of whitespace
-  _position = std::find_if_not(_position, _input.end(), is_whitespace);
-
   auto ch = *_position;
   std::string ch_str{ch};
 
@@ -102,6 +101,19 @@ Token Lexer::next_token() noexcept {
       }
       ++_position;
       return Token(TokenType::Bang, "!");
+    }
+
+    if (ch == '>') {
+        if (peek_char() == '=') {
+            _position += 2;
+            return Token(TokenType::Ge, ">=");
+        }
+    }
+    if (ch == '<') {
+        if (peek_char() == '=') {
+            _position += 2;
+            return Token(TokenType::Le, "<=");
+        }
     }
 
     auto type = _token_lookup.at(ch_str);
